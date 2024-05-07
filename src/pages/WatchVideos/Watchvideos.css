@@ -1,0 +1,33 @@
+.app__watchvideos{
+  background-image: url('../../assets/empty\ bg.jpg');
+  width: 100%;
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat; 
+  background-size: cover; 
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  overflow: hidden;
+
+  
+}
+.app__watchvideos-button{
+
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+.app__watchvideos-button button{
+  background-color: #00b0f5;
+  border: none;
+  width: 20rem;
+  height:3.5rem;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  color: white;
+}
