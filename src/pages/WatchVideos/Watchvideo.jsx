@@ -5,7 +5,8 @@ import Navbar from '../NavBar/Navbar';
 const WatchVideos = () => {
   const [videoTitles, setVideoTitles] = useState([]);
   const [fetchError, setFetchError] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [selectedVideoTitle, setSelectedVideoTitle] = useState(null);
+  const [selectedVideoURL, setSelectedVideoURL] = useState(null);
 
   const fetchVideoTitles = () => {
     fetch('http://127.0.0.1:5000/api/videos')
@@ -13,7 +14,6 @@ const WatchVideos = () => {
         if (!res.ok) {
           throw new Error('Failed to fetch video titles');
         }
-        console.log(res);
         return res.json();
       })
       .then(data => {
@@ -32,24 +32,21 @@ const WatchVideos = () => {
   }, []);
 
   const playVideo = (title) => {
-    // Fetch the video corresponding to the selected title
     fetch(`http://127.0.0.1:5000/api/video/${title}`)
       .then(res => {
         if (!res.ok) {
           throw new Error('Failed to fetch video');
         }
-        return res.json();
+        return res.blob();
       })
-      .then(data => {
-        let url = data.videoUrl;
-        const lastIndex = url.lastIndexOf('/'); 
-
-        const endPart = url.substring(lastIndex + 1);
-        setSelectedVideo(endPart);
+      .then(blob => {
+        let url = URL.createObjectURL(blob);
+        setSelectedVideoURL(url);
+        setSelectedVideoTitle(title)
       })
       .catch(err => {
         console.error('Error fetching video:', err);
-        setSelectedVideo(null);
+        setSelectedVideoURL(null);
       });
   };
   return (
@@ -69,11 +66,12 @@ const WatchVideos = () => {
             ))}
           </ul>
         </div>
-        {selectedVideo && (
+        {selectedVideoURL && (
           <div className="video-player-container">
-            
-            <h2>Now Playing: {selectedVideo}</h2>
-            <video src={require(`../../video_save/${selectedVideo}`)} controls autoPlay width={400} height={400} />
+            <h2>Now Playing: {selectedVideoTitle}</h2>
+            <video controls width={400} height={400}>
+                <source src={selectedVideoURL} type="video/mp4" />
+            </video>
           </div>
         )}
       </div>
